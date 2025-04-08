@@ -1,0 +1,45 @@
+
+API Testing Guide for StudentEnquiry (Django + DRF)
+
+BASE URL:
+http://127.0.0.1:8000/api/ENQUIRY/
+
+1. CREATE Student Enquiry (POST)
+--------------------------------
+URL: POST /api/ENQUIRY/
+Body (raw JSON):
+{
+  "name": "John Doe",
+  "dob": "1995-08-15",
+  "mobile": "9876543210",
+  "email": "john.doe@example.com",
+  "currently_working": "yes"
+}
+
+2. LIST All Enquiries (GET)
+---------------------------
+URL: GET /api/ENQUIRY/
+
+3. RETRIEVE Student Enquiry by ID (GET)
+---------------------------------------
+URL: GET /api/ENQUIRY/{id}/
+
+4. UPDATE Student Enquiry (PUT)
+-------------------------------
+URL: PUT /api/ENQUIRY/{id}/
+Body (raw JSON):
+{
+  "name": "John Smith",
+  "dob": "1995-08-15",
+  "mobile": "9876543210",
+  "email": "john.smith@example.com",
+  "currently_working": "no"
+}
+
+5. DELETE Student Enquiry (DELETE)
+----------------------------------
+URL: DELETE /api/ENQUIRY/{id}/
+
+6. SEARCH by Name (GET - Custom Action)
+---------------------------------------
+URL: GET /api/ENQUIRY/get_by_name/?name=John
