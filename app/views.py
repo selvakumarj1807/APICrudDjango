@@ -1,10 +1,37 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from app.forms import StudentEnquiryForm
 from app.models import StudentEnquiry
 from app.serializers import StudentEnquirySerializer
 from rest_framework import viewsets, status
 # Create your views here.
+
+# Frontend view for StudentEnquiry
+
+def student_list(request):
+    students = StudentEnquiry.objects.all()
+    return render(request, 'student_list.html', {'students': students})
+
+def student_detail(request, pk):
+    student = get_object_or_404(StudentEnquiry, pk=pk)
+    return render(request, 'student_detail.html', {'student': student})
+
+def student_create(request):
+    if request.method == 'POST':
+        form = StudentEnquiryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('student_list')
+    else:
+        form = StudentEnquiryForm()
+    return render(request, 'student_create.html', {'form': form})
+
+
+
+#Backend API for StudentEnquiry
+# This API is used to perform CRUD operations on the StudentEnquiry model.
+
 
 class StudentEnquiryViewSet(viewsets.ModelViewSet):
     queryset = StudentEnquiry.objects.all()

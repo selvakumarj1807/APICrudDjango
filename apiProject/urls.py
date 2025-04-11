@@ -17,7 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from app import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app.urls'))
+    path('api/', include('app.urls')),
+    path('', views.student_list, name='student_list'),
+    path('<int:pk>/', views.student_detail, name='student_detail'),
+    path('create/', views.student_create, name='student_create'),
 ]
