@@ -7,31 +7,43 @@ from app.serializers import StudentEnquirySerializer
 from rest_framework import viewsets, status
 # Create your views here.
 
-# Frontend view for StudentEnquiry
-
+# -----------------------------
+# ✅ Template-Based Views (use ModelForm)
+# -----------------------------
 def student_list(request):
     students = StudentEnquiry.objects.all()
     return render(request, 'student_list.html', {'students': students})
 
-def student_detail(request, pk):
-    student = get_object_or_404(StudentEnquiry, pk=pk)
-    return render(request, 'student_detail.html', {'student': student})
 
 def student_create(request):
     if request.method == 'POST':
         form = StudentEnquiryForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('student_list')
-    else:
-        form = StudentEnquiryForm()
+            # Do extra validation via serializer
+            serializer = StudentEnquirySerializer(data=form.cleaned_data)
+            if serializer.is_valid():
+                serializer.save()
+                return redirect('student_list')
+            else:
+                # Push serializer errors back into form
+                for field, errors in serializer.errors.items():
+                    for error in errors:
+                        form.add_error(field, error)
+        # Form has errors or serializer failed
+        return render(request, 'student_create.html', {'form': form})
+    
+    form = StudentEnquiryForm()
     return render(request, 'student_create.html', {'form': form})
 
 
+def student_detail(request, pk):
+    student = get_object_or_404(StudentEnquiry, pk=pk)
+    return render(request, 'student_detail.html', {'student': student})
 
-#Backend API for StudentEnquiry
-# This API is used to perform CRUD operations on the StudentEnquiry model.
 
+# -----------------------------
+# ✅ API ViewSet (use DRF Serializers)
+# -----------------------------
 
 class StudentEnquiryViewSet(viewsets.ModelViewSet):
     queryset = StudentEnquiry.objects.all()
